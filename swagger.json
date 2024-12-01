@@ -1,0 +1,156 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "PocketHealth DICOM API",
+    "description": "API for uploading and processing DICOM files."
+  },
+  "host": "localhost:5000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/upload": {
+      "post": {
+        "summary": "Upload a DICOM file",
+        "description": "Allows uploading a DICOM file to the server.",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "DICOM file to upload.",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File uploaded successfully.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error in file upload.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dicom-header-attribute": {
+      "get": {
+        "summary": "Retrieve a DICOM header attribute",
+        "description": "Fetches a specified attribute from the DICOM file header.",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "query",
+            "description": "Name of the uploaded DICOM file.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "description": "Tag in the format XXXX,XXXX to retrieve the attribute.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Attribute retrieved successfully.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "attribute": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error in request or file processing.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "File or tag not found.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/convert-to-png": {
+      "get": {
+        "summary": "Convert a DICOM file to PNG",
+        "description": "Converts the pixel data from a DICOM file to PNG format.",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "query",
+            "description": "Name of the uploaded DICOM file.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PNG image returned successfully.",
+            "content": {
+              "image/png": {}
+            }
+          },
+          "400": {
+            "description": "Error in file processing.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "File not found.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
