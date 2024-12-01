@@ -1,72 +1,147 @@
-# PocketHealth DICOM
+# PocketHealth DICOM Service
 
-### Steps To Run:
+This repository provides a simple Flask-based service for uploading, processing, and retrieving data from DICOM files. It includes REST endpoints for uploading DICOM files, retrieving metadata, and converting files to PNG format. The service also features Swagger documentation for easy exploration of available endpoints.
 
-The app is running on Docker for ease of you, ensure you have recent version of Docker running locally.
+---
 
-Start the service
-`docker compose up`
+## Getting Started
 
-The service should be running on host: `0.0.0.0` and port `5001`
+### Prerequisites
 
-Swagger is set up to be on `http://0.0.0.0:5001/api/docs/`, feel free to navigate to that url for manual testing and for an overview of each input and response
+- **Docker (recommended):** Ensure Docker and Docker Compose are installed on your system.
+- **Python (alternative):** Install Python 3.11 or higher if you plan to run the service without Docker.
 
-If you would prefer using curl requests, the breakdown is as following:
+### Installation
 
+1. Clone this repository to your local machine:
+   ```bash
+   git clone https://github.com/sacert/pocket-health-dicom.git
+   cd pocket-health-dicom
+   ```
 
-```
-POST /upload: Uploads and stores the DICOM file.
-```
+2. Copy the example environment file and adjust it for your environment:
+   ```bash
+   cp .env.example .env
+   ```
 
+---
 
-example curl request where file is a DICOM file:
-```
+## Running the Service
+
+### With Docker (Recommended)
+
+1. Build and start the service using Docker Compose:
+   ```bash
+   docker compose up
+   ```
+
+2. The service will be available at `http://0.0.0.0:5001`.
+
+---
+
+### Without Docker
+
+1. Install the Python dependencies:
+   ```bash
+   pip3 install -r requirements.txt
+   ```
+
+2. Run the Flask application:
+   ```bash
+   flask run -h 0.0.0.0 -p 5001
+   ```
+
+---
+
+## REST Endpoints
+
+### **POST** `/upload`
+
+Uploads and stores a DICOM file.
+
+**Body Parameters:**
+- `file` (required): The path to the DICOM file.
+
+**Example Request:**
+```bash
 curl -X 'POST' \
   'http://0.0.0.0:5001/upload' \
   -H 'accept: application/json' \
   -H 'Content-Type: multipart/form-data' \
-  -F 'file=@IM000002'
+  -F 'file=@path/to/your/file.dcm'
 ```
 
-```
-GET /dicom-header-attribute: Retrieves header attribute data based on the DICOM tag (query parameter).
-```
+---
 
-example curl request where filename is the filename of an uploaded DICOM file and tag is the respective DICOM tag in the format of XXXX,XXXX where each element is a hexidecimal value
-```
+### **GET** `/dicom-header-attribute`
+
+Retrieves the value of a specific DICOM header attribute based on the provided tag.
+
+**Query Parameters:**
+- `filename` (required): The name of the uploaded DICOM file.
+- `tag` (required): The DICOM tag in the format `XXXX,XXXX` (hexadecimal).
+
+**Example Request:**
+```bash
 curl -X 'GET' \
-  'http://0.0.0.0:5001/dicom-header-attribute?filename=IM000001&tag=0010%2C0020' \
+  'http://0.0.0.0:5001/dicom-header-attribute?filename=example.dcm&tag=0010,0010' \
   -H 'accept: application/json'
 ```
 
-```
-GET /convert-to-png: Converts the DICOM file to a PNG and serves it.
-```
+---
 
-example curl where filename is a DICOM file that has been uploaded and the output is the respective PNG
-```
+### **GET** `/convert-to-png`
+
+Converts a DICOM file to PNG format and returns the PNG image.
+
+**Query Parameters:**
+- `filename` (required): The name of the uploaded DICOM file.
+
+**Example Request:**
+```bash
 curl -X 'GET' \
-  'http://0.0.0.0:5001/convert-to-png?filename=IM000002' --output output.png \
+  'http://0.0.0.0:5001/convert-to-png?filename=example.dcm' --output example.png \
   -H 'accept: application/json'
 ```
 
-### Limitations:
+---
 
-- Files are saved via image name so if two files share the same name, the latter will overwrite the former (ie, uploading a file named 'IM000002' and then uploading a different file but with the same file name of 'IM000002' will overwrite the former file)
-- DICOM files are saved to the `/tmp` directory so the Operating System will eventually clean these up.
+## Swagger Documentation
 
-### Future improvements
+Swagger documentation is available at:
+```
+http://0.0.0.0:5001/api/docs/
+```
 
-- Integrate with a database and/or S3 for file storage.
-- Be able to support converting to different formats other than PNG
-- Batch uploading and downloading
-- Rate limiting, file size limiting, compression of files
-- Connect to a message broker (Kafka) as well as Kubernetes to handle increased load
+Once the server is running, navigate to this URL to explore and test the API endpoints.
 
-### Rationals:
-- Flask/Python - I chose this combination as it is what I am most comfortable with
-- I put everything within the `app.py` for simplicity reasons
-- I used `tmp` to store files so that we don't have to worry about any issues regarding stale data that didn't get cleaned up as the OS will ensure they are removed
+---
 
-### Notes:
-- I generated the `test_app.py` using ChatGPT -- while it was not perfect, it got me 80% of the way there and I did the rest. I believe ChatGPT is a great helper tool to validate my code as well as set up a lot of the testing boilerplate.
+## Limitations
+
+1. **File Overwriting:** Files with the same name will overwrite each other. For example, uploading two files named `example.dcm` will result in the second file replacing the first.
+2. **Temporary Storage:** DICOM files are stored in the `/tmp` directory. These files will be cleaned up by the operating system over time.
+
+---
+
+## Future Improvements
+
+- **File Storage:** Integrate with a database or S3 for persistent file storage.
+- **File Formats:** Support conversion to formats other than PNG.
+- **Batch Processing:** Add support for batch uploads and downloads.
+- **Enhancements:** Implement rate limiting, file compression, and improved file size handling.
+- **Scalability:** Use a message broker (e.g., Kafka) and Kubernetes to scale the service for increased load.
+
+---
+
+## Why These Choices?
+
+- **Flask and Python:** Selected for their simplicity and familiarity.
+- **File Storage:** Temporary files are stored in `/tmp` to avoid issues with stale data, as the operating system will automatically clean up these files.
+- **Code Simplicity:** All logic is contained within `app.py` for straightforward maintenance and clarity.
+
+---
+
+## Notes
+
+- Unit tests were generated with the help of ChatGPT, which assisted in creating boilerplate code and validation. The tests were then refined manually to ensure correctness and reliability.

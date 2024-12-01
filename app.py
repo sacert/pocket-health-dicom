@@ -39,7 +39,7 @@ def parse_tag(tag):
         return tuple(int(x, 16) for x in tag.split(","))
     except:
         raise ValueError(
-            "Invalid structure for tag, it should be (XXXX, XXXX) where each element is a hexidemical value"
+            "Invalid structure for tag, it should be (XXXX, XXXX) where each element is a hexademical value"
         )
 
 
