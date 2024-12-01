@@ -86,12 +86,13 @@ def get_dicom_header_attribute():
         if not dicom_file:
             return jsonify({"error": "Invalid DICOM file"}), 400
 
-        tag = parse_tag(tag)
+        hexadecimal_tag = parse_tag(tag)
 
-        if not tag in dicom_file:
+        print(dicom_file)
+        if not hexadecimal_tag in dicom_file:
             return jsonify({"error": f"Tag not found: {tag}"}), 404
 
-        return jsonify({"attribute": str(dicom_file[tag])}), 200
+        return jsonify({"attribute": str(dicom_file[hexadecimal_tag])}), 200
     except InvalidDicomError as e:
         return jsonify({"error": f"Error processing DICOM file; {str(e)}"}), 400
     except ValueError as e:
