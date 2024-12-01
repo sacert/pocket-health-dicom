@@ -2,7 +2,7 @@
 
 This repository provides a simple Flask-based service for uploading, processing, and retrieving data from DICOM files. It includes REST endpoints for uploading DICOM files, retrieving metadata, and converting files to PNG format. The service also features Swagger documentation for easy exploration of available endpoints.
 
----
+
 
 ## Getting Started
 
@@ -24,7 +24,7 @@ This repository provides a simple Flask-based service for uploading, processing,
    cp .env.example .env
    ```
 
----
+
 
 ## Running the Service
 
@@ -51,7 +51,7 @@ This repository provides a simple Flask-based service for uploading, processing,
    flask run -h 0.0.0.0 -p 5001
    ```
 
----
+
 
 ## REST Endpoints
 
@@ -104,7 +104,7 @@ curl -X 'GET' \
   -H 'accept: application/json'
 ```
 
----
+
 
 ## Swagger Documentation
 
@@ -115,14 +115,13 @@ http://0.0.0.0:5001/api/docs/
 
 Once the server is running, navigate to this URL to explore and test the API endpoints.
 
----
 
 ## Limitations
 
 1. **File Overwriting:** Files with the same name will overwrite each other. For example, uploading two files named `example.dcm` will result in the second file replacing the first.
 2. **Temporary Storage:** DICOM files are stored in the `/tmp` directory. These files will be cleaned up by the operating system over time.
 
----
+
 
 ## Future Improvements
 
@@ -132,7 +131,6 @@ Once the server is running, navigate to this URL to explore and test the API end
 - **Enhancements:** Implement rate limiting, file compression, and improved file size handling.
 - **Scalability:** Use a message broker (e.g., Kafka) and Kubernetes to scale the service for increased load.
 
----
 
 ## Why These Choices?
 
@@ -140,7 +138,6 @@ Once the server is running, navigate to this URL to explore and test the API end
 - **File Storage:** Temporary files are stored in `/tmp` to avoid issues with stale data, as the operating system will automatically clean up these files.
 - **Code Simplicity:** All logic is contained within `app.py` for straightforward maintenance and clarity.
 
----
 
 ## Notes
 
