@@ -65,7 +65,7 @@
           {
             "name": "tag",
             "in": "query",
-            "description": "Tag in the format XXXX,XXXX to retrieve the attribute.",
+            "description": "Tag in the format XXXX,XXXX to retrieve the attribute where each element is a hexadecimal value.",
             "required": true,
             "type": "string",
             "example": "0016,0010"
