@@ -36,6 +36,11 @@ This repository provides a simple Flask-based service for uploading, processing,
    ```
 
 2. The service will be available at `http://0.0.0.0:5001`.
+3. Run tests with:
+   ```bash
+   docker compose run app pytest .
+   ```
+
 
 ---
 
@@ -49,6 +54,10 @@ This repository provides a simple Flask-based service for uploading, processing,
 2. Run the Flask application:
    ```bash
    flask run -h 0.0.0.0 -p 5001
+   ```
+3. Run tests with:
+   ```bash
+   pytest
    ```
 
 
@@ -128,7 +137,7 @@ Once the server is running, navigate to this URL to explore and test the API end
 - **File Storage:** Integrate with a database or S3 for persistent file storage.
 - **File Formats:** Support conversion to formats other than PNG.
 - **Batch Processing:** Add support for batch uploads and downloads.
-- **Enhancements:** Implement rate limiting, file compression, and improved file size handling.
+- **Enhancements:** Implement rate limiting, file compression, improved file size handling, and the ability to view all uploaded files.
 - **Scalability:** Use a message broker (e.g., Kafka) and Kubernetes to scale the service for increased load.
 
 
